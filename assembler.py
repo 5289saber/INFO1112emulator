@@ -154,13 +154,15 @@ def assembler(instructions, allLines, lineNum):
                 #print(line.strip()[1:-1])
                 if label == line.strip()[1:-1]: # finds :[label]:
                     if found:
-                        print(f"Duplicate label name: {label}")
+                        print(f"assembler.py: Duplicate label name: {label}", file=sys.stderr)
+                        sys.exit(1)
                         return
                     encodedCommand[1] = valueConversion(allLines.index(line)) #stores the line of the command.
                     found = True
                 
             if found == False:
-                print(f"Undefined label name: {label}")
+                print(f"assembler.py: Undefined label name: {label}", file=sys.stderr)
+                sys.exit(1)
                 return
             
             encodedCommand[2] = bin(int(bytes[2])) #value1
@@ -179,12 +181,13 @@ def assembler(instructions, allLines, lineNum):
             encodedCommand[3] = bin(0b0)
 
         case _:
-            print("Malformed instruction on line {lineNum}")
+            print("assembler.py: Malformed instruction on line {lineNum}", file=sys.stderr)
+            sys.exit(1)
 
     return encodedCommand
 
 def main():
-
+    
     """
     python3 assembler.py --hex testing.prog testing.hex
     python3 assembler.py testing.prog testing.bin
@@ -249,7 +252,8 @@ def main():
                 print(f'Finished compiling. File {returnFile} has been created.')
 
             except PermissionError: # inside try -> cannot edit existing file
-                print(f"File {returnFile} cannot be written to.")
+                print(f"assembler.py: File {returnFile} cannot be written to.", file=sys.stderr)
+                sys.exit(1)
 
         else:
 
@@ -261,13 +265,16 @@ def main():
                 print(f'Finished compiling. File {returnFile} has been created.')
 
             except PermissionError: # inside try -> cannot edit existing bin file
-                print(f"File {returnFile} cannot be written to.")
+                print(f"assembler.py: File {returnFile} cannot be written to.", file=sys.stderr)
+                sys.exit(1)
 
     except FileNotFoundError:
-        print(f"File {programFile} does not exist.")
+        print(f"assembler.py: File {programFile} does not exist.", file=sys.stderr)
+        sys.exit(1)
 
     except PermissionError: # outside try -> reading file
-        print(f"File {programFile} cannot be read.")
-    
+        print(f"assembler.py: File {programFile} cannot be read.", file=sys.stderr)
+        sys.exit(1)
+
 if __name__ == "__main__":
     main()

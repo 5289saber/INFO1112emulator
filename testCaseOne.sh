@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Usage: ./testCaseOne.sh expected.txt
+# Usage: ./testCaseOne.sh testCaseOneExp.txt
 
 EXPECTED=$1
 OUTPUT=testCaseOneOut.txt
@@ -21,8 +21,8 @@ python3 assembler.py testing.prog > "$OUTPUT"
 # Compare actual vs expected
 if diff -u "$EXPECTED" "$OUTPUT" > diff_result.txt; then
   echo "✅ Test Passed"
-  rm diff_result.txt
+  rm diffResultOne.txt
 else
   echo "❌ Test Failed - Differences found:"
-  cat diff_result.txt
+  cat diffResultOne.txt
 fi

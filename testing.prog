@@ -1,4 +1,5 @@
 SET 30 50
 SET 2 51
-ADD 52 50 51
-PUT 52 N d
+:label:
+EXIT 69
+JMP label

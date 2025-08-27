@@ -1,0 +1,33 @@
+Syntax:
+SET <d> <v>
+MOV <d> <s>
+ADD <d> <a> <b>
+SUB <d> <a> <b>
+READ <d> N
+READ <d> S <c>
+PUT <s> N <f>
+PUT <s> S <c>
+JMP <label>
+JEQ <label> <a> <b>
+JGT <label> <a> <b>
+CALL <d> <p>
+EXIT <v>
+
+Rules:
+<d>: address. can be any number between 0-255
+<v>: value. can be:
+            1. ASCII, limited to char value 32-127
+            2. Binary, must start with 0b, any number between 0-255
+            3. Hexadecimal, must start with 0x, any number between 0-255
+            4. Octal, must start with 0o, any number between 0-255
+<f>: format. can be b, o, d, h.
+<label>: a word of your choice.
+<c>: bytes for (READ), make sure <d> + <c> < 256 
+<all other shits not mentioned>: any number
+
+======= The file should have max 256 lines. =======
+
+======= name file as: [filename].prog =======
+
+CAN ALSO ADD COMMENTS AS DEMOED:
+//comment

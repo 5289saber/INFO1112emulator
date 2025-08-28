@@ -2,15 +2,14 @@ import sys
 
 def valueConversion(value: str):
     """
-    takes value:str
-
+    takes value:str\n
     the value inputted can be binary, decimal, hexadecimal, octal and ASCII
     """
     header = value[0]
     if header.isalpha():
         # ASCII
         return bin(ord(value))
-    elif header == "0":
+    elif header == "0" and len(value) > 1:
         # bin, hex, oct
         numType = value[0:2]
         match numType:
@@ -110,13 +109,13 @@ def assembler(instructions, allLines, lineNum):
                 #print(line.strip()[1:-1])
                 if label == line.strip()[1:-1]: # finds :[label]:
                     if found:
-                        print(f"Duplicate label name: {label}")
+                        print(f"assembler.py: Duplicate label name: {label}", file=sys.stderr)
                         return
-                    encodedCommand[1] = valueConversion(allLines.index(line)) #stores the line of the command.
+                    encodedCommand[1] = valueConversion(str(allLines.index(line))) #stores the line of the command.
                     found = True
                 
             if found == False:
-                print(f"Undefined label name: {label}")
+                print(f"assembler.py: Undefined label name: {label}", file=sys.stderr)
                 return
             
             encodedCommand[2] = bin(0b0)
@@ -132,13 +131,13 @@ def assembler(instructions, allLines, lineNum):
                 #print(line.strip()[1:-1])
                 if label == line.strip()[1:-1]: # finds :[label]:
                     if found:
-                        print(f"Duplicate label name: {label}")
+                        print(f"assembler.py: Duplicate label name: {label}", file=sys.stderr)
                         return
-                    encodedCommand[1] = valueConversion(allLines.index(line)) #stores the line of the command.
+                    encodedCommand[1] = valueConversion(str(allLines.index(line))) #stores the line of the command.
                     found = True
                 
             if found == False:
-                print(f"Undefined label name: {label}")
+                print(f"assembler.py: Undefined label name: {label}", file=sys.stderr)
                 return
             
             encodedCommand[2] = bin(int(bytes[2])) #value1
@@ -157,7 +156,7 @@ def assembler(instructions, allLines, lineNum):
                         print(f"assembler.py: Duplicate label name: {label}", file=sys.stderr)
                         sys.exit(1)
                         return
-                    encodedCommand[1] = valueConversion(allLines.index(line)) #stores the line of the command.
+                    encodedCommand[1] = valueConversion(str(allLines.index(line))) #stores the line of the command.
                     found = True
                 
             if found == False:
@@ -170,8 +169,8 @@ def assembler(instructions, allLines, lineNum):
             
         case "CALL": # dont know how yet -> use os.fork()
             encodedCommand[0] = bin(0b00100000)
-            encodedCommand[1] = bin(0b0) #storage for child process exit code
-            encodedCommand[2] = bin(0b0) #string for child process name??????
+            encodedCommand[1] = bin(int(bytes[1])) #storage for child process exit code
+            encodedCommand[2] = valueConversion(bytes[2]) #string for child process name??????
             encodedCommand[3] = bin(0b0)
 
         case "EXIT":
@@ -181,7 +180,7 @@ def assembler(instructions, allLines, lineNum):
             encodedCommand[3] = bin(0b0)
 
         case _:
-            print("assembler.py: Malformed instruction on line {lineNum}", file=sys.stderr)
+            print(f"assembler.py: Malformed instruction on line {lineNum}", file=sys.stderr)
             sys.exit(1)
 
     return encodedCommand
@@ -229,20 +228,28 @@ def main():
 
                     instCount += 1 # indexes instruction count
 
-        #print(memory)
+       # print(memory)
         
         if sys.argv[1] == "--hex":
             try:
                 with open(returnFile, "w") as openFile:
 
                     byteCount = 4 #ignore first 4 bytes (magic bytes and stuff)
+                    lineNum = {}
 
                     for line in allLines:
-
+                        
                         if line.strip()[0] == ":" and line.strip()[-1] == ":": # finds labels and ignores (does not encode into memory.)
+                            lineNum[line.strip()[1:-1]] = allLines.index(line)
                             continue
-
-                        hexValues = [f"{int(b, 2):02X}" for b in memory[byteCount:byteCount+4]] # formats hex values by counting bytes from memory (4-7, 8-11 etc)
+                        
+                        if line.split(" ")[0] == "JMP" or line.split(" ")[0] == "JGT" or line.split(" ")[0] == "JEQ":
+                            originalLine = line.split(" ")
+                            label = originalLine[1]
+                            line = f"{originalLine[0]} {lineNum.get(label)} {originalLine[2]} {originalLine[3]}"
+                        
+                        #print(memory[byteCount:byteCount+4])
+                        hexValues = [f"{int(b, 2):02X}" for b in memory[byteCount:byteCount+4]] # formats hex values by counting bytes from memory
                         hexString = "".join(hex for hex in hexValues) # joins hex values into a string
 
                         openFile.write(f"{line.strip()}: {hexString}\n") # writes line to file

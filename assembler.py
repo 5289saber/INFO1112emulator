@@ -188,8 +188,8 @@ def assembler(instructions, allLines, lineNum):
 def main():
     
     """
-    python3 assembler.py --hex testing.prog testing.hex
-    python3 assembler.py testing.prog testing.bin
+    python3 assembler.py --hex testing.asm testing.hex
+    python3 assembler.py testing.asm testing.bin
     """
 
     instCount = 0 #instructionCount
@@ -228,14 +228,19 @@ def main():
 
                     instCount += 1 # indexes instruction count
 
-       # print(memory)
+        # print(memory)
+
+        """
+        checks the --hex tag on command line argument.
+        """
         
-        if sys.argv[1] == "--hex":
+        if sys.argv[1] == "--hex": # --hex -> generate hex file.
+
             try:
                 with open(returnFile, "w") as openFile:
 
-                    byteCount = 4 #ignore first 4 bytes (magic bytes and stuff)
-                    lineNum = {}
+                    byteCount = 4 # ignore first 4 bytes (magic bytes and stuff)
+                    lineNum = {} # dict for label readup: {label:lineNum}
 
                     for line in allLines:
                         
@@ -243,10 +248,15 @@ def main():
                             lineNum[line.strip()[1:-1]] = allLines.index(line)
                             continue
                         
-                        if line.split(" ")[0] == "JMP" or line.split(" ")[0] == "JGT" or line.split(" ")[0] == "JEQ":
+                        if  line.split(" ")[0] == "JGT" or line.split(" ")[0] == "JEQ": # JGT and JEQ takes full 4 bytes of MC.
                             originalLine = line.split(" ")
                             label = originalLine[1]
                             line = f"{originalLine[0]} {lineNum.get(label)} {originalLine[2]} {originalLine[3]}"
+
+                        elif line.split(" ")[0] == "JMP": # JMP takes 2 bytes of MC
+                            originalLine = line.split(" ")
+                            label = originalLine[1]
+                            line = f"{originalLine[0]} {lineNum.get(label)}"
                         
                         #print(memory[byteCount:byteCount+4])
                         hexValues = [f"{int(b, 2):02X}" for b in memory[byteCount:byteCount+4]] # formats hex values by counting bytes from memory
@@ -262,7 +272,7 @@ def main():
                 print(f"assembler.py: File {returnFile} cannot be written to.", file=sys.stderr)
                 sys.exit(1)
 
-        else:
+        else: # does not have --hex tag -> createn normal bin file.
 
             try:
                 with open(returnFile, "wb") as openFile:

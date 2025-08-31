@@ -180,7 +180,6 @@ def main(args: list[str]):
             
         pc += 4
         instNum += 1
-    print(memory)
 
 
 if __name__ == "__main__":

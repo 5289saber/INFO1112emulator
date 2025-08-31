@@ -7,10 +7,8 @@ SET 10 0x0A
 :loop:
 PUT 2 N d
 PUT 10 S 1
-:loops:
 ADD 4 2 3
 MOV 2 3
 MOV 3 4
 SUB 1 1 0
-JMP loops 1 0
 JGT loop 1 0

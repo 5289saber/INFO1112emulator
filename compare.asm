@@ -1,0 +1,19 @@
+READ 100 N
+READ 101 N
+
+JEQ EQ 100 101
+
+// neq
+SET 0 'n'
+SET 1 'e'
+
+JMP END
+
+:EQ:
+SET 0 'e'
+SET 1 'q'
+
+:END:
+SET 3 10
+PUT 0 S 3
+

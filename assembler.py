@@ -6,9 +6,9 @@ def valueConversion(value: str):
     the value inputted can be binary, decimal, hexadecimal, octal and ASCII
     """
     header = value[0]
-    if header.isalpha():
+    if header == "'":
         # ASCII
-        return bin(ord(value))
+        return bin(ord(value[1]))
     elif header == "0" and len(value) > 1:
         # bin, hex, oct
         numType = value[0:2]
@@ -80,6 +80,7 @@ def assembler(instructions, allLines, lineNum):
             encodedCommand[1] = bin(int(bytes[1])) #mem address 1
 
             if bytes[2] == "N": #read number of bytes
+                print("N")
                 encodedCommand[2] = bin(0b000000001) #num of bytes
                 encodedCommand[3] = bin(0) #value2
 
@@ -212,17 +213,29 @@ def main():
         with open(programFile, 'r') as openFile:
             allLines = openFile.readlines()
 
-            for line in allLines: #comment clearing loop to return lines without comments
-                if line[0:2] == "//":
-                    allLines.remove(line);   
+            programLines = []
 
-            for line in allLines:
+            for line in allLines: #comment and blank line clearing loop to return lines without comments
+                if line == "\n":
+                    print("removed empty line")
+                    continue
+
+                if line[0:2] == "//":
+                    print("removed comment")
+                    continue
+
+                programLines.append(line)
+
+            print(programLines)
+
+            for line in programLines:
+                print(line)
 
                 if line.strip()[0] == ":" and line.strip()[-1] == ":": # finds labels and ignores (does not encode into memory.)
                     continue
 
                 else:
-                    binCode = assembler(line.strip(),allLines, instCount) #shoves line into assembler and returns a list[4] of the converted instr.
+                    binCode = assembler(line.strip(),programLines, instCount) #shoves line into assembler and returns a list[4] of the converted instr.
                     for i in range(len(binCode)):
                         memory.append(binCode[i]) # appends the binary instr. into the memory
 
@@ -242,10 +255,10 @@ def main():
                     byteCount = 4 # ignore first 4 bytes (magic bytes and stuff)
                     lineNum = {} # dict for label readup: {label:lineNum}
 
-                    for line in allLines:
+                    for line in programLines:
                         
                         if line.strip()[0] == ":" and line.strip()[-1] == ":": # finds labels and ignores (does not encode into memory.)
-                            lineNum[line.strip()[1:-1]] = allLines.index(line)
+                            lineNum[line.strip()[1:-1]] = programLines.index(line)
                             continue
                         
                         if  line.split(" ")[0] == "JGT" or line.split(" ")[0] == "JEQ": # JGT and JEQ takes full 4 bytes of MC.

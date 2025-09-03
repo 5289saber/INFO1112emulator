@@ -25,20 +25,20 @@ def valueConversion(value: str):
     header = value[0]
     if header.isalpha():
         # ASCII
-        return bin(ord(value))
+        return ord(value)
     elif header == "0" and len(value) > 1:
         # bin, hex, oct
         numType = value[0:2]
         match numType:
             case "0b":
-                return bin(int(value[2:],2))
+                return int(value[2:],2)
             case "0x":
-                return bin(int(value[2:],16))
+                return int(value[2:],16)
             case "0o":
-                return bin(int(value[2:],8))
+                return int(value[2:],8)
     else:
         # decimal
-        return bin(int(value))
+        return int(value)
 
 def main(args: list[str]):
     fileName = sys.argv[1]
@@ -78,7 +78,7 @@ def main(args: list[str]):
         sys.exit(1)
         return
 
-    
+    #print(memory)
     while True:
         if instNum > 256:
             break
@@ -100,21 +100,21 @@ def main(args: list[str]):
 
             case "ADD":
                 #print(f"instruction {instNum}: add")
-                memory[MacInst[1]] = memory[MacInst[2]] + memory[MacInst[3]]
+                memory[MacInst[1]] = (memory[MacInst[2]] + memory[MacInst[3]])%256
 
             case "SUB":
                 #print(f"instruction {instNum}: sub")
-                memory[MacInst[1]] = memory[MacInst[2]] - memory[MacInst[3]]
+                memory[MacInst[1]] = (memory[MacInst[2]] - memory[MacInst[3]])%256
                 
             case "READ":
                 #print(f"instruction {instNum}: read")
-                if MacInst[2] == "0b1":
+                if bin(MacInst[2]) == "0b1":
                     #print("read number")
                     number = valueConversion(input())
 
                     memory[MacInst[1]] = number
 
-                elif MacInst[2] == "0b10":
+                elif bin(MacInst[2]) == "0b10":
                     #print("read string")
                     end = MacInst[1] + MacInst[3]
                     start = MacInst[1]
@@ -127,7 +127,7 @@ def main(args: list[str]):
                         memory[i] = int(ord(string[index]),2)
 
             case "PUT":
-               # print(f"instruction {instNum}: put")
+                #print(f"instruction {instNum}: put")
                 if bin(MacInst[2]) == "0b10000000":
                     #print("text at address")
                     start = MacInst[1]
@@ -154,12 +154,12 @@ def main(args: list[str]):
 
             case "JMP":
                 #print(f"instruction {instNum}: jump")
-                pc = int(MacInst[1])
+                pc = int(MacInst[1]) * 4
                 continue
             case "JEQ":
                 #print(f"instruction {instNum}: jump eq")
                 if memory[MacInst[2]] == memory[MacInst[3]]:
-                    pc = int(MacInst[1])
+                    pc = int(MacInst[1]) * 4
                     continue
             case "JGT":
                 #print(f"instruction {instNum}: jump gt")
@@ -172,7 +172,7 @@ def main(args: list[str]):
                 print(f"instruction {instNum}: call")
             case "EXIT":
                 #print(f"instruction {instNum}: exit")
-                sys.exit(MacInst[1])
+                sys.exit(memory[MacInst[1]])
                 break
             case _:
                 #print("no instructions left")
@@ -180,6 +180,7 @@ def main(args: list[str]):
             
         pc += 4
         instNum += 1
+    #print(memory)
 
 
 if __name__ == "__main__":

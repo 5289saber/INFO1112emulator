@@ -124,9 +124,12 @@ def main(args: list[str]):
                     index = 0
 
                     for i in range(start, end, 1):
+                        if index > len(string):
+                            continue
                         if (string[index] == "\\" and string[index+1] == "n") or (string[index] == "\\" and string[index+1] == "0"):
                             break
-                        memory[i] = int(ord(string[index]),2)
+                        memory[i] = ord(string[index])
+                        index+=1
 
             case "PUT":
                 #print(f"instruction {instNum}: put")

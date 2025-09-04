@@ -185,7 +185,7 @@ def main(args: list[str]):
                 pid = os.fork()
                 
                 if pid == 0: #child
-                    os.system(f"python3 emulator.py {fileName}")
+                    os.execvp("python3", ["python3", "emulator.py", f"{fileName}"])
                 elif pid == 1: #error in child
                     print(f"(child) emulator.py: child {pid} encountered error.", file=sys.stderr)
                     sys.exit(1)

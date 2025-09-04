@@ -9,6 +9,11 @@ def valueConversion(value: str):
     if header == "'":
         # ASCII
         return bin(ord(value[1]))
+    
+    elif header.isalpha():
+        # ASCII for formats
+        return bin(ord(header))
+                   
     elif header == "0" and len(value) > 1:
         # bin, hex, oct
         numType = value[0:2]
@@ -24,7 +29,7 @@ def valueConversion(value: str):
         return bin(int(value))
     
 
-def assembler(instructions, allLines, lineNum):
+def assembler(instructions, labelDict, lineNum):
     """
     takes instructions:string, allLines:[list] and lineNum:int\n
     instructions are parsed into binary values before passing back to the main() to encode into memory\n
@@ -46,7 +51,7 @@ def assembler(instructions, allLines, lineNum):
     32. CALL <d> <p>
     33. EXIT <v>
     """
-    bytes: [str] = instructions.split(" ") # split the instruction into operands and opcode
+    bytes = instructions.split(" ") # split the instruction into operands and opcode
     opcode = bytes[0] # opcode is 1st position
     encodedCommand = [0,0,0,0] # mach. instr.'s are 4 bytes
 
@@ -104,20 +109,11 @@ def assembler(instructions, allLines, lineNum):
             encodedCommand[0] = bin(0b00010000) 
 
             label = bytes[1] #label name
-            found:bool = False
-            #print(label)
-            for line in allLines: # loops through all lines
-                #print(line.strip()[1:-1])
-                if label == line.strip()[1:-1]: # finds :[label]:
-                    if found:
-                        print(f"assembler.py: Duplicate label name: {label}", file=sys.stderr)
-                        return
-                    encodedCommand[1] = valueConversion(str(allLines.index(line))) #stores the line of the command.
-                    found = True
-                
-            if found == False:
+            if label in labelDict:
+                encodedCommand[1] = valueConversion(str(labelDict.get(label)))
+            else:
                 print(f"assembler.py: Undefined label name: {label}", file=sys.stderr)
-                return
+                sys.exit(1)
             
             encodedCommand[2] = bin(0b0)
             encodedCommand[3] = bin(0b0)
@@ -126,20 +122,11 @@ def assembler(instructions, allLines, lineNum):
             encodedCommand[0] = bin(0b00010001) 
 
             label = bytes[1] #label name
-            found:bool = False
-            #print(label)
-            for line in allLines: # loops through all lines
-                #print(line.strip()[1:-1])
-                if label == line.strip()[1:-1]: # finds :[label]:
-                    if found:
-                        print(f"assembler.py: Duplicate label name: {label}", file=sys.stderr)
-                        return
-                    encodedCommand[1] = valueConversion(str(allLines.index(line))) #stores the line of the command.
-                    found = True
-                
-            if found == False:
+            if label in labelDict:
+                encodedCommand[1] = valueConversion(str(labelDict.get(label)))
+            else:
                 print(f"assembler.py: Undefined label name: {label}", file=sys.stderr)
-                return
+                sys.exit(1)
             
             encodedCommand[2] = bin(int(bytes[2])) #value1
             encodedCommand[3] = bin(int(bytes[3])) #value2
@@ -148,22 +135,11 @@ def assembler(instructions, allLines, lineNum):
             encodedCommand[0] = bin(0b00010010) 
             
             label = bytes[1] #label name
-            found:bool = False
-            #print(label)
-            for line in allLines: # loops through all lines
-                #print(line.strip()[1:-1])
-                if label == line.strip()[1:-1]: # finds :[label]:
-                    if found:
-                        print(f"assembler.py: Duplicate label name: {label}", file=sys.stderr)
-                        sys.exit(1)
-                        return
-                    encodedCommand[1] = valueConversion(str(allLines.index(line))) #stores the line of the command.
-                    found = True
-                
-            if found == False:
+            if label in labelDict:
+                encodedCommand[1] = valueConversion(str(labelDict.get(label)))
+            else:
                 print(f"assembler.py: Undefined label name: {label}", file=sys.stderr)
                 sys.exit(1)
-                return
             
             encodedCommand[2] = bin(int(bytes[2])) #value1
             encodedCommand[3] = bin(int(bytes[3])) #value2
@@ -213,33 +189,37 @@ def main():
         with open(programFile, 'r') as openFile:
             allLines = openFile.readlines()
 
-            programLines = []
+            programLines = [] # assembly lines without comments, blank lines
+            labelDict = {} # dict for label readup: {label:lineNum}
+            withoutLabels = [] # assembly lines without labels (mapped into labelDict)
 
             for line in allLines: #comment and blank line clearing loop to return lines without comments
-                if line == "\n":
-                    print("removed empty line")
-                    continue
-
-                if line[0:2] == "//":
-                    print("removed comment")
+                if line == "\n" or line[0:2] == "//":
                     continue
 
                 programLines.append(line)
 
-            print(programLines)
+            for line in programLines: # finds and maps all labels first -> returns lines without label to withoutLabels
+                
+                if line.strip()[0] == ":" and line.strip()[-1] == ":": # finds labels
+                    
+                    if line.strip()[1:-1] in labelDict: # if already exists -> duplicate
+                        print(f"assembler.py: Duplicate label name: {label}", file=sys.stderr)
+                        sys.exit(1)
 
-            for line in programLines:
-                print(line)
-
-                if line.strip()[0] == ":" and line.strip()[-1] == ":": # finds labels and ignores (does not encode into memory.)
+                    labelDict[line.strip()[1:-1]] = programLines.index(line)-len(labelDict) # map label to line
                     continue
+                withoutLabels.append(line)
 
-                else:
-                    binCode = assembler(line.strip(),programLines, instCount) #shoves line into assembler and returns a list[4] of the converted instr.
-                    for i in range(len(binCode)):
-                        memory.append(binCode[i]) # appends the binary instr. into the memory
+            print(labelDict)
 
-                    instCount += 1 # indexes instruction count
+            for line in withoutLabels:
+
+                binCode = assembler(line.strip(), labelDict, instCount) #shoves line into assembler and returns a list[4] of the converted instr.
+                for i in range(len(binCode)):
+                    memory.append(binCode[i]) # appends the binary instr. into the memory
+
+                instCount += 1 # indexes instruction count
 
         # print(memory)
 
@@ -253,23 +233,17 @@ def main():
                 with open(returnFile, "w") as openFile:
 
                     byteCount = 4 # ignore first 4 bytes (magic bytes and stuff)
-                    lineNum = {} # dict for label readup: {label:lineNum}
 
-                    for line in programLines:
-                        
-                        if line.strip()[0] == ":" and line.strip()[-1] == ":": # finds labels and ignores (does not encode into memory.)
-                            lineNum[line.strip()[1:-1]] = programLines.index(line)
-                            continue
-                        
-                        if  line.split(" ")[0] == "JGT" or line.split(" ")[0] == "JEQ": # JGT and JEQ takes full 4 bytes of MC.
+                    for line in withoutLabels:
+                        if line.split(" ")[0] == "JGT" or line.split(" ")[0] == "JEQ": # JGT and JEQ takes full 4 bytes of MC.
                             originalLine = line.split(" ")
-                            label = originalLine[1]
-                            line = f"{originalLine[0]} {lineNum.get(label)} {originalLine[2]} {originalLine[3]}"
+                            label = originalLine[1].strip()
+                            line = f"{originalLine[0]} {labelDict.get(label)} {originalLine[2]} {originalLine[3]}"
 
                         elif line.split(" ")[0] == "JMP": # JMP takes 2 bytes of MC
                             originalLine = line.split(" ")
-                            label = originalLine[1]
-                            line = f"{originalLine[0]} {lineNum.get(label)}"
+                            label = originalLine[1].strip()
+                            line = f"{originalLine[0]} {labelDict.get(label)}"
                         
                         #print(memory[byteCount:byteCount+4])
                         hexValues = [f"{int(b, 2):02X}" for b in memory[byteCount:byteCount+4]] # formats hex values by counting bytes from memory

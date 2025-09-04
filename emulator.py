@@ -1,4 +1,5 @@
 import sys
+import os
 
 """
 OPCODES
@@ -82,7 +83,8 @@ def main(args: list[str]):
     while True:
         if instNum > 256:
             break
-
+        
+        #print(memory)
         MacInst = memory[pc:pc+4]
         opcode = MacInst[0]
         #print(MacInst)
@@ -169,22 +171,46 @@ def main(args: list[str]):
                    # print(pc)
                     continue
             case "CALL":
-                print(f"instruction {instNum}: call")
+                #print(f"instruction {instNum}: call")
+                #print(memory)
+                index = MacInst[2]
+
+                fileName = ""
+
+                while (memory[index] != 0):
+                    fileName += chr(memory[index])
+                    index += 1
+                print(fileName)
+
+                pid = os.fork()
+                
+                if pid == 0: #child
+                    os.system(f"python3 emulator.py {fileName}")
+                elif pid == 1: #error in child
+                    print(f"(child) emulator.py: child {pid} encountered error.", file=sys.stderr)
+                    sys.exit(1)
+                else: #parent
+                    os.wait()
+
+                memory[MacInst[1]] = pid #exit code
+
             case "EXIT":
                 #print(f"instruction {instNum}: exit")
+                #print(memory) #testing output!
                 sys.exit(memory[MacInst[1]])
                 break
             case _:
                 #print("no instructions left")
+                #sprint(memory)
+                sys.exit(0)
                 break
             
         pc += 4
         instNum += 1
+    
     #print(memory)
+    
 
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-
-
-        

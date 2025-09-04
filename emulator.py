@@ -60,7 +60,7 @@ def main(args: list[str]):
             header = [hex(b) for b in fileContents[0:4]]
 
             if header != [hex(0xf2), hex(0xc3), hex(0x38), hex(0x1)]:
-                print("this is not StdChip executable file")
+                print(f"emulator.py: File {fileName} is not a valid StdChip executable.", file=sys.stderr)
                 sys.exit(1)
                 return
             
@@ -124,7 +124,7 @@ def main(args: list[str]):
                     index = 0
 
                     for i in range(start, end, 1):
-                        if string[index] == "\n" or string[index] == "\0":
+                        if (string[index] == "\\" and string[index+1] == "n") or (string[index] == "\\" and string[index+1] == "0"):
                             break
                         memory[i] = int(ord(string[index]),2)
 

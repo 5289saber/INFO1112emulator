@@ -41,11 +41,11 @@ def valueConversion(value: str):
         # decimal
         return int(value)
 
-def main(args: list[str]):
-    fileName = sys.argv[1]
-
+def main(fileName=sys.argv[1],memory=[0]*256,inst=[0]*256):
+    #fileName = sys.argv[1]
+    #print(memory)
     pc = 0
-    memory = [0]*256 # 256 memory bytes
+    #memory = [0]*256 # 256 memory bytes
 
     try:
 
@@ -54,7 +54,7 @@ def main(args: list[str]):
 
             for i in range(4, len(fileContents)):
                 #print(f"{[b for b in fileContents[i:i+4]]}")
-                memory[i-4] = fileContents[i]
+                inst[i-4] = fileContents[i]
 
                 #pc += 4
             header = [hex(b) for b in fileContents[0:4]]
@@ -68,6 +68,7 @@ def main(args: list[str]):
                 print(memory[i:i+4])"""
             
             instNum = 0 # instruction count
+        
 
     except FileNotFoundError:
         print(f"emulator.py: File {fileName} does not exist.", file=sys.stderr)
@@ -79,13 +80,14 @@ def main(args: list[str]):
         sys.exit(1)
         return
 
+    #print(f"{fileName} memory -----------------------------")
     #print(memory)
     while True:
         if instNum > 256:
             break
         
         #print(memory)
-        MacInst = memory[pc:pc+4]
+        MacInst = inst[pc:pc+4]
         opcode = MacInst[0]
         #print(MacInst)
         #print(memory[5:9])
@@ -171,40 +173,45 @@ def main(args: list[str]):
                 if memory[MacInst[2]] > memory[MacInst[3]]:
                     #print(MacInst[1])
                     pc = int(MacInst[1]) * 4
-                   # print(pc)
+                    # print(pc)
                     continue
             case "CALL":
                 #print(f"instruction {instNum}: call")
                 #print(memory)
                 index = MacInst[2]
 
-                fileName = ""
+                childFileName = ""
 
                 while (memory[index] != 0):
-                    fileName += chr(memory[index])
+                    #print(memory[index])
+                    childFileName += chr(memory[index])
                     index += 1
-                print(fileName)
+                #print(fileName)
 
                 pid = os.fork()
                 
                 if pid == 0: #child
-                    os.execvp("python3", ["python3", "emulator.py", f"{fileName}"])
+                    #os.execvp("python3", ["python3", "emulator.py", f"{fileName}"])
+                    print("mmmm child")
+                    main(childFileName,memory=memory)
                 elif pid == 1: #error in child
                     print(f"(child) emulator.py: child {pid} encountered error.", file=sys.stderr)
                     sys.exit(1)
                 else: #parent
-                    os.wait()
+                    childPID, status = os.waitpid(pid, 0)
+                    exitCode = (status >> 8) & 0xFF
 
-                memory[MacInst[1]] = pid #exit code
+                #print(f"{childPID}, {exitCode}")
+                memory[MacInst[1]] = exitCode #exit code
 
             case "EXIT":
-                #print(f"instruction {instNum}: exit")
+                #print(f"instruction {instNum}: exit with code {memory[MacInst[1]]}")
                 #print(memory) #testing output!
                 sys.exit(memory[MacInst[1]])
                 break
             case _:
                 #print("no instructions left")
-                #sprint(memory)
+                #print(memory)
                 sys.exit(0)
                 break
             
@@ -216,4 +223,4 @@ def main(args: list[str]):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()

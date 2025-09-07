@@ -13,7 +13,7 @@ def valueConversion(value: str):
     elif header.isalpha():
         # ASCII for formats
         return bin(ord(header))
-                   
+        
     elif header == "0" and len(value) > 1:
         # bin, hex, oct
         numType = value[0:2]
@@ -211,7 +211,7 @@ def main():
                     continue
                 withoutLabels.append(line)
 
-            print(labelDict)
+            #print(labelDict)
 
             for line in withoutLabels:
 
@@ -221,7 +221,7 @@ def main():
 
                 instCount += 1 # indexes instruction count
 
-        # print(memory)
+        #print(memory)
 
         """
         checks the --hex tag on command line argument.

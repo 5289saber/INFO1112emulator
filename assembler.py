@@ -59,7 +59,10 @@ def assembler(instructions, labelDict, lineNum):
         case "SET":
             encodedCommand[0] = bin(0b000000001)
             encodedCommand[1] = bin(int(bytes[1])) #mem address
-            encodedCommand[2] = valueConversion(bytes[2]) #value
+            if len(bytes) == 4 and bytes[2] == "'":
+                encodedCommand[2] = valueConversion("\' \'") #damn thing's blank
+            else:
+                encodedCommand[2] = valueConversion(bytes[2]) #value
             encodedCommand[3] = bin(0)
 
         case "MOV":

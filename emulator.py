@@ -81,7 +81,7 @@ def main(fileName=sys.argv[1],memory=[0]*256,inst=[0]*256):
         return
 
     #print(f"{fileName} memory -----------------------------")
-    #print(memory)
+    #print(inst)
     while True:
         if instNum > 256:
             break
@@ -127,7 +127,7 @@ def main(fileName=sys.argv[1],memory=[0]*256,inst=[0]*256):
 
                     for i in range(start, end, 1):
                         if index > len(string):
-                            continue
+                            break
                         if (string[index] == "\\" and string[index+1] == "n") or (string[index] == "\\" and string[index+1] == "0"):
                             break
                         memory[i] = ord(string[index])

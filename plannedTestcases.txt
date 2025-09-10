@@ -17,9 +17,19 @@ check whether the assembler and emulator can handle absolute and relative paths
 -> python3 assembler.py --hex /Users/janniklu/Documents/INFO1112/INFO1112emulator/testingPaths/echo.asm testingPaths/echoFromAbs.hex
 -> python3 assembler.py --hex testingPaths/echo.asm testingPaths/echoFromRelative.hex
 
+Emulator:
+1. Error handling:
+    a. executable does not exist
+    b. executable cannot be read
+    c. header does not match the magic values
+2. running:
+    a. range of commands and their functionality
+    
+
+
 
 All assumptions in specs:
 1. Assume an assembly file can contain at most 256 instructions
 2. Assume the ASCII value of <value> char is in range [32,127]
 3. Assume <value> given will always be in [0,256)
-4. 
+

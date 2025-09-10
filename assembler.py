@@ -1,4 +1,5 @@
 import sys
+import re
 
 def valueConversion(value: str):
     """
@@ -207,7 +208,11 @@ def main():
                 if line.strip()[0] == ":" and line.strip()[-1] == ":": # finds labels
                     
                     if line.strip()[1:-1] in labelDict: # if already exists -> duplicate
-                        print(f"assembler.py: Duplicate label name: {label}", file=sys.stderr)
+                        print(f"assembler.py: Duplicate label name: {line.strip()[1:-1]}", file=sys.stderr)
+                        sys.exit(1)
+
+                    if re.fullmatch(r"[A-Za-z_]+?", line.strip()[1:-1]) == None: # making sure the label fits within the regex pattern
+                        print(f"assembler.py: Malformed instruction on line {programLines.index(line)}", file=sys.stderr)
                         sys.exit(1)
 
                     labelDict[line.strip()[1:-1]] = programLines.index(line)-len(labelDict) # map label to line

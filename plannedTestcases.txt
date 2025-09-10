@@ -1,0 +1,25 @@
+Assemblers:
+1. Error handling:
+    a. input file does not exist
+    b. input file cannot be read
+    c. output file cannot be written to if exists
+    d. label name is not defined
+    e. label name is duplicated
+    f. Malformed instruction
+2. compiling:
+    a. range of commands and their binary representations
+    b. removes the correct empty lines and comments
+    c. can output the correct hex file.
+
+ADD and SUB -> check that it properly handles overflow and underflow (0-255 allowed only)
+make sure all commands works properly in the emulator.
+check whether the assembler and emulator can handle absolute and relative paths
+-> python3 assembler.py --hex /Users/janniklu/Documents/INFO1112/INFO1112emulator/testingPaths/echo.asm testingPaths/echoFromAbs.hex
+-> python3 assembler.py --hex testingPaths/echo.asm testingPaths/echoFromRelative.hex
+
+
+All assumptions in specs:
+1. Assume an assembly file can contain at most 256 instructions
+2. Assume the ASCII value of <value> char is in range [32,127]
+3. Assume <value> given will always be in [0,256)
+4. 

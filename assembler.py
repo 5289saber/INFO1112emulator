@@ -34,7 +34,7 @@ def assembler(instructions, labelDict, lineNum):
     """
     takes instructions:string, allLines:[list] and lineNum:int\n
     instructions are parsed into binary values before passing back to the main() to encode into memory\n
-    allLines is used for label searching for JMP and extensions\n
+    labelDict is used for label searching for JMP and extensions\n
     lineNum is used for error feedback\n
 
     opcodes:

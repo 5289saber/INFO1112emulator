@@ -89,7 +89,6 @@ def assembler(instructions, labelDict, lineNum):
             encodedCommand[1] = bin(int(bytes[1])) #mem address 1
 
             if bytes[2] == "N": #read number of bytes
-                print("N")
                 encodedCommand[2] = bin(0b000000001) #num of bytes
                 encodedCommand[3] = bin(0) #value2
 

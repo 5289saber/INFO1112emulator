@@ -1,0 +1,26 @@
+#!/bin/bash
+
+DIR="tests/test_6/"
+TEST="test6"
+NUM="6"
+
+chmod u-w "${DIR}${TEST}.bin" # manually removes the right to write to the existing bin file for testing
+
+echo "====== <Test $NUM: Assembler; Cannot write out file > ======"
+echo ""
+
+python3 assembler.py "${DIR}${TEST}.asm" "${DIR}${TEST}.bin" > "${DIR}${TEST}.out" 2>&1
+
+diff --color -u "${DIR}${TEST}.out" "${DIR}${TEST}Exp.txt"
+
+if [ $? = 0 ]; then
+
+    echo -e "\033[1;33mTest $NUM passed\033[0m"
+
+else
+    echo -e "\033[1;35mTest $NUM failed\033[0m"
+fi
+
+chmod u+w tests/test_6/test6.bin # resets the state
+
+echo ""

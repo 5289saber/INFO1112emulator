@@ -4,7 +4,7 @@
 
 echo ""
 
-for dir in tests/*/; do
+for dir in $(ls -1d tests/test_*/ | sort -V); do
     for test in "$dir"/*.sh; do
         ./$test
     done

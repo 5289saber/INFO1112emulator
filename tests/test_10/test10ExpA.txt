@@ -1,0 +1,1 @@
+Finished compiling. File tests/test_10/test10.bin has been created.

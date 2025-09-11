@@ -1,1 +1,0 @@
-Finished compiling. File tests/test2/test2.bin has been created.

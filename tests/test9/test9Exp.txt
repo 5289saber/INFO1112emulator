@@ -1,1 +1,0 @@
-Finished compiling. File tests/test9/test9.hex has been created.

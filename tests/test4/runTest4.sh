@@ -1,10 +1,10 @@
 #!/bin/bash
 
-DIR="tests/test3/"
-TEST="test3"
-NUM="3"
+DIR="tests/test4/"
+TEST="test4"
+NUM="4"
 
-echo "====== <Test $NUM: Assembler; Malformed Instruction > ======"
+echo "====== <Test $NUM: Assembler; Nonexistent file > ======"
 echo ""
 
 python3 assembler.py "${DIR}${TEST}.asm" "${DIR}${TEST}.bin" > "${DIR}${TEST}.out" 2>&1

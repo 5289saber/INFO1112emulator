@@ -1,19 +1,19 @@
 #!/bin/bash
 
-DIR="tests/test2/"
-TEST="test2"
-NUM="2"
+DIR="tests/test9/"
+TEST="test9"
+NUM="9"
 
-echo "====== <Test $NUM: Assembler; normal compilation cont.> ======"
+echo "====== <Test $NUM: Assembler; normal compilation hex> ======"
 echo ""
 
-python3 assembler.py "${DIR}${TEST}.asm" "${DIR}${TEST}.bin" > "${DIR}${TEST}.out" 2>&1
+python3 assembler.py --hex "${DIR}${TEST}.asm" "${DIR}${TEST}.hex" > "${DIR}${TEST}.out" 2>&1
 
 diff --color -u "${DIR}${TEST}.out" "${DIR}${TEST}Exp.txt"
 
 if [ $? = 0 ]; then
 
-    diff --color -u "${DIR}${TEST}.bin" "${DIR}${TEST}Exp.bin" >> "${DIR}${TEST}.out"
+    diff --color -u "${DIR}${TEST}.hex" "${DIR}${TEST}Exp.hex" >> "${DIR}${TEST}.out"
 
     if [ $? = 0 ]; then
         echo -e "\033[1;33mTest $NUM passed\033[0m"

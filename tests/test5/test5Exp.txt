@@ -1,0 +1,1 @@
+assembler.py: File tests/test5/test5.asm cannot be read.

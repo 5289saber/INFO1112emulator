@@ -25,9 +25,6 @@ Emulator:
 2. running:
     a. range of commands and their functionality
     
-
-
-
 All assumptions in specs:
 1. Assume an assembly file can contain at most 256 instructions
 2. Assume the ASCII value of <value> char is in range [32,127]

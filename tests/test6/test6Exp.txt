@@ -1,0 +1,1 @@
+assembler.py: File tests/test6/test6.bin cannot be written to.

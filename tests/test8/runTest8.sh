@@ -1,10 +1,10 @@
 #!/bin/bash
 
-DIR="tests/test3/"
-TEST="test3"
-NUM="3"
+DIR="tests/test8/"
+TEST="test8"
+NUM="8"
 
-echo "====== <Test $NUM: Assembler; Malformed Instruction > ======"
+echo "====== <Test $NUM: Assembler; Duplicate label > ======"
 echo ""
 
 python3 assembler.py "${DIR}${TEST}.asm" "${DIR}${TEST}.bin" > "${DIR}${TEST}.out" 2>&1

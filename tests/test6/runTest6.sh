@@ -1,10 +1,12 @@
 #!/bin/bash
 
-DIR="tests/test3/"
-TEST="test3"
-NUM="3"
+DIR="tests/test6/"
+TEST="test6"
+NUM="6"
 
-echo "====== <Test $NUM: Assembler; Malformed Instruction > ======"
+chmod u-w "${DIR}${TEST}.bin" # manually removes the right to write to the existing bin file for testing
+
+echo "====== <Test $NUM: Assembler; Cannot write out file > ======"
 echo ""
 
 python3 assembler.py "${DIR}${TEST}.asm" "${DIR}${TEST}.bin" > "${DIR}${TEST}.out" 2>&1
@@ -18,5 +20,7 @@ if [ $? = 0 ]; then
 else
     echo -e "\033[1;35mTest $NUM failed\033[0m"
 fi
+
+chmod u+w tests/test6/test6.bin # resets the state so I can access the file
 
 echo ""

@@ -4,26 +4,26 @@ DIR="tests/test1/"
 TEST="test1"
 NUM="1"
 
-echo "====== <Test $NUM: normal compilation> ======"
+echo "====== <Test $NUM: Assembler; normal compilation> ======"
 echo ""
 
 python3 assembler.py "${DIR}${TEST}.asm" "${DIR}${TEST}.bin" > "${DIR}${TEST}.out" 2>&1
 
-if [ "$(cat "${DIR}${TEST}.out")" = "Finished compiling. File ${DIR}${TEST}.bin has been created." ]; then
+diff --color -u "${DIR}${TEST}.out" "${DIR}${TEST}Exp.txt"
+
+if [ $? = 0 ]; then
 
     diff --color -u "${DIR}${TEST}.bin" "${DIR}${TEST}Exp.bin" >> "${DIR}${TEST}.out"
 
     if [ $? = 0 ]; then
-        echo "Test $NUM passed:"
-        cat "${DIR}${TEST}.out"
+        echo -e "\033[1;33mTest $NUM passed\033[0m"
     else
-        echo "Test $NUM failed:"
+        echo -e "\033[1;35mTest $NUM failed\033[0m"
         cat "${DIR}${TEST}.out" | tail -n +2
     fi
 
 else
-    echo "Test $NUM failed:"
-    cat "${DIR}${TEST}.out"
+    echo -e "\033[1;35mTest $NUM failed\033[0m"
 fi
 
 echo ""

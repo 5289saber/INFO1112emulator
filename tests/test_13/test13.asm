@@ -1,0 +1,37 @@
+SET 50 1
+SET 51 255
+//hehe comment
+SET 52 254
+SET 53 2
+
+SET 54 128
+SET 55 128
+
+SET 56 255
+SET 57 0
+
+ADD 58 50 51
+ADD 59 52 53
+ADD 60 54 55
+ADD 61 56 57
+//more comments
+SET 62 'l'
+
+PUT 58 N d
+PUT 58 N h
+PUT 62 S 1
+
+PUT 59 N d
+PUT 59 N h
+PUT 62 S 1
+
+PUT 60 N d
+PUT 60 N h
+PUT 62 S 1
+
+PUT 61 N d
+PUT 61 N h
+PUT 62 S 1
+
+
+//can it handle this?

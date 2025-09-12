@@ -191,8 +191,7 @@ def main(fileName=sys.argv[1],memory=[0]*256,inst=[0]*256):
                 pid = os.fork()
                 
                 if pid == 0: #child
-                    #os.execvp("python3", ["python3", "emulator.py", f"{fileName}"])
-                    print("mmmm child")
+                    #print("mmmm child")
                     main(childFileName,memory=memory)
                 elif pid == 1: #error in child
                     print(f"(child) emulator.py: child {pid} encountered error.", file=sys.stderr)

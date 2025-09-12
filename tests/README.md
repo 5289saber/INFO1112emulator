@@ -15,3 +15,7 @@ Assembler specific:
 
 Entire system:
     test_10: full process of assembling and emulating without error.
+    test_11: reading and outputting correctly using exit codes.
+    test_12: blank file
+    test_13: under and overflow
+    test_14: caller and callee

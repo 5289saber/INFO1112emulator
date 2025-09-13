@@ -14,6 +14,7 @@ Assembler specific:
     test_9: Assembling hex file
 
 Entire system:
+
     test_10: full process of assembling and emulating without error.
     test_11: reading and outputting correctly using exit codes.
     test_12: blank file

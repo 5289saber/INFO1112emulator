@@ -1,0 +1,18 @@
+READ 0 S 5
+
+SET 10 0x04
+SET 11 0x01
+SET 12 0x00
+
+:loop:
+PUT 4 S 1
+JEQ done 10 12
+SUB 10 10 11
+MOV 4 3
+MOV 3 2
+MOV 2 1
+MOV 1 0
+JMP loop
+
+:done:
+EXIT 0

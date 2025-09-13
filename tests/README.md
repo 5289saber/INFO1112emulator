@@ -19,3 +19,5 @@ Entire system:
     test_12: blank file
     test_13: under and overflow
     test_14: caller and callee
+    test_15: factorial of 5
+    test_16: reversing string input of length 5

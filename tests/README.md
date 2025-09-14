@@ -7,8 +7,8 @@ Assembler specific:
 
     test_3: Malformed Instruction - JGT written as JFT
     test_4: Non existent file. test tries to find test4.asm where actual file is test41.asm
-    test_5: Cannot read input file. executes chmod in shell script to remove and give read access independently
-    test_6: Cannot write output file. same as test_5, executes chmod locally for write instead.
+    test_5: Cannot read input file. executes chmod in shell script to remove and give read access independently (failed - ED)
+    test_6: Cannot write output file. same as test_5, executes chmod locally for write instead. (failed - ED)
     test_7: Assembling with undefined label
     test_8: Assembling with duplicate label
     test_9: Assembling hex file
@@ -22,3 +22,8 @@ Entire system:
     test_14: caller and callee
     test_15: factorial of 5
     test_16: reversing string input of length 5
+
+Emulator specific:
+
+    test_17: executable does not exist
+    test_18: executable cannot be read (failed - ED)

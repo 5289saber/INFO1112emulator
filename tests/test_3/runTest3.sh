@@ -4,7 +4,7 @@ DIR="tests/test_3/"
 TEST="test3"
 NUM="3"
 
-echo "====== <Test $NUM: Assembler; Malformed Instruction > ======"
+echo "====== <Test $NUM: Assembler; Malformed Instruction> ======"
 echo ""
 
 python3 assembler.py "${DIR}${TEST}.asm" "${DIR}${TEST}.bin" > "${DIR}${TEST}.out" 2>&1

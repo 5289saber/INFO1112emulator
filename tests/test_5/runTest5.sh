@@ -6,7 +6,7 @@ NUM="5"
 
 chmod u-r "${DIR}${TEST}.asm" # manually removes the right to read the asm file for testing
 
-echo "====== <Test $NUM: Assembler; Cannot read in file > ======"
+echo "====== <Test $NUM: Assembler; Cannot read in file> ======"
 echo ""
 
 python3 assembler.py "${DIR}${TEST}.asm" "${DIR}${TEST}.bin" > "${DIR}${TEST}.out" 2>&1

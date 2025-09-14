@@ -17,8 +17,8 @@ all testcases for submission are in tests
 
 - If the hierarchy is faulty, testcase 14 (call) could fail due to the directory for tests/test_14 not found during execution\n
 
-### Failure of tests 5, 6, 18 - reason provided.
-Currently, tests 5, 6 and 18 tests the stdout in throwing the correct assembler/emulator error message to the terminal.
+### Failure of tests 5, 6, 19 - reason provided.
+Currently, tests 5, 6 and 19 tests the stdout in throwing the correct assembler/emulator error message to the terminal.
 
 However, due to the nature of ED not being able to remove permissions of files via chmod, all three tests will fail as the in/out file can be read/written
 
@@ -26,7 +26,7 @@ To fully verify the correct testcase behaviour, please (if possible) manually re
 
 1. chmod u-r tests/test_5/test5.asm
 2. chmod u-w tests/test_6/test6.bin
-3. chmod u-r tests/test_18/test18.bin
+3. chmod u-r tests/test_19/test19.bin
 
 (or perhaps there is a possibility that the tests and emulator/assembler can be downloaded locally and tested)
 

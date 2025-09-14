@@ -4,7 +4,7 @@ DIR="tests/test_4/"
 TEST="test4"
 NUM="4"
 
-echo "====== <Test $NUM: Assembler; Nonexistent file > ======"
+echo "====== <Test $NUM: Assembler; Nonexistent file> ======"
 echo ""
 
 python3 assembler.py "${DIR}${TEST}.asm" "${DIR}${TEST}.bin" > "${DIR}${TEST}.out" 2>&1

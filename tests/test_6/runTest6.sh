@@ -6,7 +6,7 @@ NUM="6"
 
 chmod u-w "${DIR}${TEST}.bin" # manually removes the right to write to the existing bin file for testing
 
-echo "====== <Test $NUM: Assembler; Cannot write out file > ======"
+echo "====== <Test $NUM: Assembler; Cannot write out file> ======"
 echo ""
 
 python3 assembler.py "${DIR}${TEST}.asm" "${DIR}${TEST}.bin" > "${DIR}${TEST}.out" 2>&1

@@ -1,6 +1,8 @@
-List of tests and their checking conditions:
+# List of tests and their checking conditions:
 
-Assembler specific:
+***
+
+## Assembler specific:
 
     test_1: Simple assembling without error
     test_2: Assembling with comments and extra blank lines without error
@@ -12,7 +14,9 @@ Assembler specific:
     test_8: Assembling with duplicate label
     test_9: Assembling hex file
 
-Entire system:
+***
+
+## Full system:
 
     test_10: full process of assembling and emulating without error.
     test_11: reading and outputting correctly using exit codes.
@@ -21,7 +25,7 @@ Entire system:
         - makes sure that the assembler and emulator can handle a blank file
 
     test_13: under and overflow
-    
+
         - tests the ability to handle under and overflowing for add and sub
         
     test_14: caller and callee
@@ -47,7 +51,9 @@ Entire system:
         
         - instructions will end at 84, where 0.3333.. instructions left isn't enough to run the rest.
 
-Emulator specific:
+***
+
+## Emulator specific:
 
     test_18: executable does not exist
     test_19: executable cannot be read (failed - ED)

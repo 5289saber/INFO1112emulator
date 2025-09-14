@@ -1,13 +1,13 @@
 #!/bin/bash
 
-DIR="tests/test_7/"
-TEST="test7"
-NUM="7"
+DIR="tests/test_20/"
+TEST="test20"
+NUM="20"
 
-echo "====== <Test $NUM: Assembler; Undefined label> ======"
+echo "====== <Test $NUM: Emulator; Invalid executable> ======"
 echo ""
 
-python3 assembler.py "${DIR}${TEST}.asm" "${DIR}${TEST}.bin" > "${DIR}${TEST}.out" 2>&1
+python3 emulator.py "${DIR}${TEST}.bin" > "${DIR}${TEST}.out" 2>&1
 
 diff --color -u "${DIR}${TEST}.out" "${DIR}${TEST}Exp.txt"
 

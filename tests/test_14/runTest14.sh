@@ -4,7 +4,7 @@ DIR="tests/test_14/"
 TEST="test14"
 NUM="14"
 
-echo "====== <Test $NUM: Emulator; Caller & Callee> ======"
+echo "====== <Test $NUM: Full system; Caller & Callee> ======"
 echo ""
 
 python3 assembler.py "${DIR}caller.asm" "${DIR}caller.bin" > "${DIR}callerA.out" 2>&1

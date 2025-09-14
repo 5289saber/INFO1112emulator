@@ -121,7 +121,7 @@ def assembler(instructions, labelDict, lineNum):
             encodedCommand[2] = bin(0b0)
             encodedCommand[3] = bin(0b0)
 
-        case "JEQ": # dont know how yet -> might be the same as JMP but will have to test if JMP works first.
+        case "JEQ":
             encodedCommand[0] = bin(0b00010001) 
 
             label = bytes[1] #label name
@@ -147,7 +147,7 @@ def assembler(instructions, labelDict, lineNum):
             encodedCommand[2] = bin(int(bytes[2])) #value1
             encodedCommand[3] = bin(int(bytes[3])) #value2
             
-        case "CALL": # dont know how yet -> use os.fork()
+        case "CALL":
             encodedCommand[0] = bin(0b00100000)
             encodedCommand[1] = bin(int(bytes[1])) #storage for child process exit code
             encodedCommand[2] = valueConversion(bytes[2]) #string for child process name??????
@@ -241,7 +241,7 @@ def main():
 
                     byteCount = 4 # ignore first 4 bytes (magic bytes and stuff)
 
-                    for line in withoutLabels:
+                    for line in withoutLabels: # parsing the line number to the instruction
                         if line.split(" ")[0] == "JGT" or line.split(" ")[0] == "JEQ": # JGT and JEQ takes full 4 bytes of MC.
                             originalLine = line.split(" ")
                             label = originalLine[1].strip()
@@ -252,7 +252,6 @@ def main():
                             label = originalLine[1].strip()
                             line = f"{originalLine[0]} {labelDict.get(label)}"
                         
-                        #print(memory[byteCount:byteCount+4])
                         hexValues = [f"{int(b, 2):02X}" for b in memory[byteCount:byteCount+4]] # formats hex values by counting bytes from memory
                         hexString = "".join(hex for hex in hexValues) # joins hex values into a string
 

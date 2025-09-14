@@ -42,30 +42,24 @@ def valueConversion(value: str):
         return int(value)
 
 def main(fileName=sys.argv[1],memory=[0]*256,inst=[0]*256):
-    #fileName = sys.argv[1]
-    #print(memory)
-    pc = 0
-    #memory = [0]*256 # 256 memory bytes
+
+    pc = 0 # sets program counter to 0
 
     try:
 
         with open(fileName, 'rb') as openFile:
             fileContents = openFile.read()
 
-            for i in range(4, len(fileContents)):
+            for i in range(4, len(fileContents)): # ignores the first 4 bytes -> executable header.
                 #print(f"{[b for b in fileContents[i:i+4]]}")
-                inst[i-4] = fileContents[i]
+                inst[i-4] = fileContents[i] # puts into instruction array
 
-                #pc += 4
             header = [hex(b) for b in fileContents[0:4]]
 
-            if header != [hex(0xf2), hex(0xc3), hex(0x38), hex(0x1)]:
+            if header != [hex(0xf2), hex(0xc3), hex(0x38), hex(0x1)]: # checks the header if its stdchip exec.
                 print(f"emulator.py: File {fileName} is not a valid StdChip executable.", file=sys.stderr)
                 sys.exit(1)
                 return
-            
-            """for i in range(0, len(memory), 4):
-                print(memory[i:i+4])"""
             
             instNum = 0 # instruction count
         
@@ -83,15 +77,13 @@ def main(fileName=sys.argv[1],memory=[0]*256,inst=[0]*256):
     #print(f"{fileName} memory -----------------------------")
     #print(inst)
     while True:
-        if instNum > 256:
+        if instNum > 256: # max instruction number is 256
             break
         
-        #print(memory)
-        MacInst = inst[pc:pc+4]
-        opcode = MacInst[0]
+        MacInst = inst[pc:pc+4] # gets the machine instructions (4 bytes)
+        opcode = MacInst[0] # opcode is 1st byte
+
         #print(MacInst)
-        #print(memory[5:9])
-        
 
         match opcodes.get(opcode):
             case "SET":
@@ -120,15 +112,15 @@ def main(fileName=sys.argv[1],memory=[0]*256,inst=[0]*256):
 
                 elif bin(MacInst[2]) == "0b10":
                     #print("read string")
-                    end = MacInst[1] + MacInst[3]
+                    end = MacInst[1] + MacInst[3] # adds start memory location with number of bytes to read
                     start = MacInst[1]
                     string = input()
                     index = 0
 
-                    for i in range(start, end, 1):
+                    for i in range(start, end, 1): # starts reading the number of bytes into memory
                         if index >= len(string):
                             break
-                        if (string[index] == "\\" and string[index+1] == "n") or (string[index] == "\\" and string[index+1] == "0"):
+                        if (string[index] == "\\" and string[index+1] == "n") or (string[index] == "\\" and string[index+1] == "0"): # ends if there's newline or null char
                             break
                         memory[i] = ord(string[index])
                         index+=1
@@ -138,14 +130,14 @@ def main(fileName=sys.argv[1],memory=[0]*256,inst=[0]*256):
                 if bin(MacInst[2]) == "0b10000000":
                     #print("text at address")
                     start = MacInst[1]
-                    end = MacInst[3] + MacInst[1]
+                    end = MacInst[3] + MacInst[1] # adds start memory location with number of bytes to read
 
                     for i in range(start, end, 1):
                         print(chr(memory[i]),end="")
 
                 else:
                     #print("value at address")
-                    match chr(MacInst[2]):
+                    match chr(MacInst[2]): # the type
                         case "b":
                             #print("binary num")
                             print(memory[MacInst[1]],end="")
@@ -161,41 +153,35 @@ def main(fileName=sys.argv[1],memory=[0]*256,inst=[0]*256):
 
             case "JMP":
                 #print(f"instruction {instNum}: jump")
-                pc = int(MacInst[1]) * 4
+                pc = int(MacInst[1]) * 4 # line number * 4 bytes per instruction
                 instNum += 1
                 continue
             case "JEQ":
                 #print(f"instruction {instNum}: jump eq")
                 if memory[MacInst[2]] == memory[MacInst[3]]:
-                    pc = int(MacInst[1]) * 4
+                    pc = int(MacInst[1]) * 4 # line number * 4 bytes per instruction
                     instNum += 1
                     continue
             case "JGT":
                 #print(f"instruction {instNum}: jump gt")
                 if memory[MacInst[2]] > memory[MacInst[3]]:
-                    #print(MacInst[1])
-                    pc = int(MacInst[1]) * 4
+                    pc = int(MacInst[1]) * 4 # line number * 4 bytes per instruction
                     instNum += 1
-                    # print(pc)
                     continue
             case "CALL":
                 #print(f"instruction {instNum}: call")
-                #print(memory)
                 index = MacInst[2]
 
                 childFileName = ""
 
-                while (memory[index] != 0):
-                    #print(memory[index])
+                while (memory[index] != 0): # gets the whole file name
                     childFileName += chr(memory[index])
                     index += 1
-                #print(fileName)
 
                 pid = os.fork()
                 
                 if pid == 0: #child
-                    #print("mmmm child")
-                    main(childFileName,memory=memory)
+                    main(childFileName,memory=memory) # child should share memory
                 elif pid == 1: #error in child
                     print(f"(child) emulator.py: child {pid} encountered error.", file=sys.stderr)
                     sys.exit(1)
@@ -208,12 +194,10 @@ def main(fileName=sys.argv[1],memory=[0]*256,inst=[0]*256):
 
             case "EXIT":
                 #print(f"instruction {instNum}: exit with code {memory[MacInst[1]]}")
-                #print(memory) #testing output!
                 sys.exit(memory[MacInst[1]])
                 break
             case _:
                 #print("no instructions left")
-                #print(memory)
                 sys.exit(0)
                 break
             
@@ -222,8 +206,6 @@ def main(fileName=sys.argv[1],memory=[0]*256,inst=[0]*256):
     
     #print(memory)
     #print(instNum)
-    
-
 
 if __name__ == "__main__":
     main()

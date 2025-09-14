@@ -162,17 +162,20 @@ def main(fileName=sys.argv[1],memory=[0]*256,inst=[0]*256):
             case "JMP":
                 #print(f"instruction {instNum}: jump")
                 pc = int(MacInst[1]) * 4
+                instNum += 1
                 continue
             case "JEQ":
                 #print(f"instruction {instNum}: jump eq")
                 if memory[MacInst[2]] == memory[MacInst[3]]:
                     pc = int(MacInst[1]) * 4
+                    instNum += 1
                     continue
             case "JGT":
                 #print(f"instruction {instNum}: jump gt")
                 if memory[MacInst[2]] > memory[MacInst[3]]:
                     #print(MacInst[1])
                     pc = int(MacInst[1]) * 4
+                    instNum += 1
                     # print(pc)
                     continue
             case "CALL":
@@ -218,6 +221,7 @@ def main(fileName=sys.argv[1],memory=[0]*256,inst=[0]*256):
         instNum += 1
     
     #print(memory)
+    #print(instNum)
     
 
 
